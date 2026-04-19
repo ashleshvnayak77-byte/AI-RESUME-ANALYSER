@@ -1,36 +1,23 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>AI Resume Analyzer</title>
+</head>
 <body>
 
-<h2>AI Resume Analyzer</h2>
+<h2>Upload Resume</h2>
 
-<input type="file" id="resume">
-<br><br>
+<form id="uploadForm">
+    <input type="file" id="resume" required><br><br>
+    
+    <textarea id="jd" placeholder="Paste Job Description"></textarea><br><br>
+    
+    <button type="submit">Analyze</button>
+</form>
 
-<button onclick="analyze()">Analyze</button>
+<h3 id="result"></h3>
 
-<p id="result"></p>
-
-<script>
-async function analyze() {
-    let file = document.getElementById("resume").files[0];
-
-    let formData = new FormData();
-    formData.append("resume", file);
-
-    let response = await fetch("https://your-backend-url.onrender.com/analyze", {
-        method: "POST",
-        body: formData
-    });
-
-    let data = await response.json();
-
-    document.getElementById("result").innerText =
-        "Score: " + data.score +
-        "\nMatched: " + data.matched +
-        "\nMissing: " + data.missing;
-}
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
