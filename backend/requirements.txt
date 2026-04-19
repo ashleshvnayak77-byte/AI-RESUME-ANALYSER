@@ -1,3 +1,7 @@
 flask
-PyPDF2
-gunicorn
+sentence-transformers
+scikit-learn
+spacy
+pymupdf
+numpy
+pandas
