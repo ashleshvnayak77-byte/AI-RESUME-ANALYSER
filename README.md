@@ -35,4 +35,4 @@ Open index.html in browser
 
 ## 💡 Author
 
-Ashlesh (Skullcrow)
+Ashlesh V. Nayak
