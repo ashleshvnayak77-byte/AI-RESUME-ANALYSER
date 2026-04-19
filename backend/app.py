@@ -1,42 +1,35 @@
 from flask import Flask, request, jsonify
-import PyPDF2
+from parser import extract_text
+from ml_model import get_similarity
+from skill_extractor import extract_skills
 
 app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "AI Resume Analyzer Running 🚀"
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
     file = request.files['resume']
+    job_description = request.form['job_description']
 
-    reader = PyPDF2.PdfReader(file)
-    text = ""
+    file_path = "resumes/" + file.filename
+    file.save(file_path)
 
-    for page in reader.pages:
-        text += page.extract_text()
+    # Extract text
+    resume_text = extract_text(file_path)
 
-    skills = ["python","c++","sql","java","machine learning","data analysis","html","css","javascript","docker","aws"]
+    # ML similarity score
+    score = get_similarity(resume_text, job_description)
 
-    detected_skills = []
-    for skill in skills:
-        if skill in text.lower():
-            detected_skills.append(skill)
-
-    job_skills = ["python","sql","docker","aws","machine learning"]
-
-    matched = []
-    missing = []
-
-    for skill in job_skills:
-        if skill in detected_skills:
-            matched.append(skill)
-        else:
-            missing.append(skill)
-
-    score = (len(matched)/len(job_skills))*100
+    # Extract skills
+    skills = extract_skills(resume_text)
 
     return jsonify({
-        "score": score,
-        "matched": matched,
-        "missing": missing
+        "match_score": round(score, 2),
+        "skills": skills
     })
 
-app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
